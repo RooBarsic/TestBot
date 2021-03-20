@@ -354,6 +354,7 @@ public class Tokens {
         System.out.println("token :::: AWS_DB_W3_ROOT_USER = " + AWS_DB_W3_ROOT_USER);
         System.out.println("token :::: AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD);
 
+
         System.out.println("token :::: APP_SECRET_KEY = " + APP_SECRET_KEY);
         System.out.println("token :::: TESTING_TELEGRAM_BOT_HEROKU_URL = " + TESTING_TELEGRAM_BOT_HEROKU_URL);
         System.out.println("token :::: TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = " + TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL);
