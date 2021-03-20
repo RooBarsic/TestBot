@@ -1,0 +1,40 @@
+name: BotNet
+env:
+  APPLICATION_NAME : "BotNet"
+
+on: [push]
+
+jobs:
+  run-tests:
+
+    runs-on: [ubuntu-18.04]
+
+    steps:
+      - name: Java version
+        run: java -version
+      - name: Installing maven
+        run: sudo apt-get -y install maven
+      - name: Maven version
+        run: mvn -version
+      - name: Clone repository
+        uses: actions/checkout@v1
+      - name: Run tests
+        env:
+          PRODUCTION_BOT_NAME: ${{ secrets.PRODUCTION_BOT_NAME }}
+          PRODUCTION_BOT_TOKEN: ${{ secrets.PRODUCTION_BOT_TOKEN }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT   }}
+          TESTING_TELEGRAM_BOT_NAME: ${{ secrets.TESTING_TELEGRAM_BOT_NAME }}
+          TESTING_TELEGRAM_BOT_TOKEN: ${{ secrets.TESTING_TELEGRAM_BOT_TOKEN }}
+          TESTING_MAIL_RU_AGENT_BOT_NAME: ${{ secrets.TESTING_MAIL_RU_AGENT_BOT_NAME }}
+          TESTING_MAIL_RU_AGENT_BOT_TOKEN: ${{ secrets.TESTING_MAIL_RU_AGENT_BOT_TOKEN }}
+          TESTING_VK_BOT_ID: ${{ secrets.TESTING_VK_BOT_ID }}
+          TESTING_VK_BOT_TOKEN: ${{ secrets.TESTING_VK_BOT_TOKEN }}
+          TESTING_FACEBOOK_BOT_BASE_URL: ${{ secrets.TESTING_FACEBOOK_BOT_BASE_URL }}
+          TESTING_FACEBOOK_BOT_PAGE_ACCESS_TOKEN: ${{ secrets.TESTING_FACEBOOK_BOT_PAGE_ACCESS_TOKEN }}
+          TESTING_FACEBOOK_BOT_VERIFY_TOKEN: ${{ secrets.TESTING_FACEBOOK_BOT_VERIFY_TOKEN }}
+          TELEGRAM_FEEDBACK_GROUP_ID: ${{ secrets.TELEGRAM_FEEDBACK_GROUP_ID }}
+          TELEGRAM_FEEDBACK_GROUP_LOGIN: ${{ secrets.TELEGRAM_FEEDBACK_GROUP_LOGIN }}
+          AWS_DB_W3_URL: ${{ secrets.AWS_DB_W3_URL }}
+          AWS_DB_W3_ROOT_USER: ${{ secrets.AWS_DB_W3_ROOT_USER }}
+          AWS_DB_W3_ROOT_PASSWORD: ${{ secrets.AWS_DB_W3_ROOT_PASSWORD }}
+        run: mvn test
