@@ -15,18 +15,21 @@ public class RoomBotLogic {
     private final BotRequestSender botRequestSender;
     private final BotNetDataBase botNetDataBase;
     private final ConcurrentLinkedDeque<BotNetMail> receivedMails;
+    private final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue;
     private final List<BotCommand> botCommandsList;
     private final String webAppUrl;
 
     public RoomBotLogic(@NotNull final BotRequestSender botRequestSender,
                         @NotNull final BotNetDataBase botNetDataBase,
                         @NotNull final ConcurrentLinkedDeque<BotNetMail> receivedMails,
-                        @NotNull final String webAppUrl) {
+                        @NotNull final String webAppUrl,
+                        @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue) {
         this.botRequestSender = botRequestSender;
         this.receivedMails = receivedMails;
         this.botNetDataBase = botNetDataBase;
         this.botCommandsList = new ArrayList<>();
         this.webAppUrl = webAppUrl;
+        this.roomUpdatesQueue = roomUpdatesQueue;
 
         initCommands();
     }
@@ -109,19 +112,8 @@ public class RoomBotLogic {
                     //TODO report to RabbitMQ about new message in room
 
                     //transfer received message to users in that messenger
-                    final BotNetBox botNetBox = new BotNetBox();
-                    botNetBox.setMessage(botNetMail.getMessage());
-                    botNetBox.addButton(new BotNetButton("Leave", "/leave"));
-                    botNetBox.addButton(new BotNetButton("Profile", "/profile"));
-                    botNetBox.addButton(new BotNetButton("Help", "/help"));
-
-                    final List<String> roomMembersChatIds = botNetDataBase.getRoomMembersByRoomId(userRoomId);
-                    for (final String receiverChatId : roomMembersChatIds) {
-                        if (!receiverChatId.equals(botNetMail.getUserChatId())) {
-                            botNetBox.setReceiverChatId(receiverChatId);
-                            deliverBox(botNetBox);
-                        }
-                    }
+                    botNetMail.setRoomId(userRoomId);
+                    roomUpdatesQueue.addLast(botNetMail);
                 }
             } else {
                 // new user
