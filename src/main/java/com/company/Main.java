@@ -41,7 +41,7 @@ public class Main {
         final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue);
 
         // create and run Telegram bot with BotRoomsBrain
-        //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
+        final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
 
         System.out.println(" All systems up");
     }
