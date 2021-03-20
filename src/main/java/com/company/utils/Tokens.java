@@ -29,6 +29,7 @@ public class Tokens {
     private String AWS_DB_W3_URL = "null";
     private String AWS_DB_W3_ROOT_USER = "null";
     private String AWS_DB_W3_ROOT_PASSWORD = "null";
+    private String APP_SECRET_KEY = "null";
 
 
     /** add parsing tokens from file or System environments */
@@ -75,7 +76,8 @@ public class Tokens {
                         "TESTING_FACEBOOK_BOT_BASE_URL = " + TESTING_FACEBOOK_BOT_BASE_URL  + "\n" +
                         "AWS_DB_W3_URL = " + AWS_DB_W3_URL + "\n" +
                         "AWS_DB_W3_ROOT_USER = " + AWS_DB_W3_ROOT_USER + "\n" +
-                        "AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD + "\n\n");
+                        "AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD + "\n" +
+                        "APP_SECRET_KEY = " + APP_SECRET_KEY + "\n\n");
 
 /*
 					String str1 = scanner.nextLine();
@@ -168,6 +170,8 @@ public class Tokens {
             AWS_DB_W3_ROOT_USER = System.getenv("AWS_DB_W3_ROOT_USER");
             AWS_DB_W3_ROOT_PASSWORD = System.getenv("AWS_DB_W3_ROOT_PASSWORD");
 
+            APP_SECRET_KEY = System.getenv("APP_SECRET_KEY");
+
         }
     }
 
@@ -224,6 +228,9 @@ public class Tokens {
                 break;
             case "AWS_DB_W3_ROOT_PASSWORD" :
                 AWS_DB_W3_ROOT_PASSWORD = tokenValue;
+                break;
+            case "APP_SECRET_KEY" :
+                APP_SECRET_KEY = tokenValue;
                 break;
         }
     }
@@ -284,6 +291,9 @@ public class Tokens {
             case "AWS_DB_W3_ROOT_PASSWORD" :
                 temp = AWS_DB_W3_ROOT_PASSWORD;
                 break;
+            case "APP_SECRET_KEY" :
+                temp = APP_SECRET_KEY;
+                break;
         }
         return temp;
     }
@@ -308,5 +318,7 @@ public class Tokens {
         System.out.println("token :::: AWS_DB_W3_URL = " + AWS_DB_W3_URL);
         System.out.println("token :::: AWS_DB_W3_ROOT_USER = " + AWS_DB_W3_ROOT_USER);
         System.out.println("token :::: AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD);
+
+        System.out.println("token :::: APP_SECRET_KEY = " + APP_SECRET_KEY);
     }
 }
