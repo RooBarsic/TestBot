@@ -50,15 +50,16 @@ public class FacebookBotRequestListener extends CustomHttpHandlerCommand impleme
             // add attachments if has some
             if (receivedFacebookMessage.hasAttachment()) {
                 List<ReceivedFacebookAttachment> receivedAttachments = receivedFacebookMessage.getReceivedAttachments();
-                for (ReceivedFacebookAttachment attachment : receivedAttachments) {
+//                for (ReceivedFacebookAttachment attachment : receivedAttachments) {
 
                     //TODO transfer libraries
                     // final BotNetFile botNetFile = FacebookUtils.downloadAttachmentToBotNetFile(attachment);
                     // botNetMail.addFile(botNetFile);
-                }
+ //               }
             }
 
             // add filled box to the processing queue
+            System.out.println(LOG_PREFIX + " added botNetMail to queue");
             receivedMailsQueue.addLast(botNetMail);
         } catch (Exception e) {
             e.printStackTrace();

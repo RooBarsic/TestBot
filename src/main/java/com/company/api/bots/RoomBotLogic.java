@@ -56,6 +56,7 @@ public class RoomBotLogic {
 
                 // get and remove first box
                 final BotNetMail botNetMail = receivedMails.removeFirst();
+                System.out.println("RoomBotLogic - got new botMail ( user_id : " + botNetMail.getUserChatId() + "; message = " + botNetMail.getMessage());
 
                 // process box
                 processBotNetMail(botNetMail);
