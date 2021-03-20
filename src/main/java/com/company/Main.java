@@ -42,7 +42,7 @@ public class Main {
         //final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue);
 
         // create and run MailRuAgentBot bot with BotRoomsBrain
-        //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
+        final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
 
         // create and start pinger
         runPeriodicalPing();
