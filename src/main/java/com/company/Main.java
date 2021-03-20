@@ -42,7 +42,10 @@ public class Main {
         final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue);
 
         // create and run MailRuAgentBot bot with BotRoomsBrain
-        final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
+        //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue);
+
+        // create and start pinger
+        runPeriodicalPing();
 
         System.out.println(" All systems up");
     }
@@ -130,7 +133,7 @@ public class Main {
         return mailRuAgentBot.getBotRequestSender();
     }
 
-    public void runPeriodicalPing() {
+    public static void runPeriodicalPing() {
         final PingBotFriends pingBotFriends = new PingBotFriends();
         final int pingDelay = Integer.parseInt(tokensStorage.getTokens("PING_DELAY"));
         pingBotFriends.setPingDelay(pingDelay);

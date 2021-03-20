@@ -37,10 +37,13 @@ public class PingBotFriends {
     public void startPinger() {
         new Thread(() -> {
             try {
-                for (final String appUrl : friendBotAppsUrl) {
-                    BotNetUtils.httpsGETRequest(appUrl);
+                while (true) {
+                    for (final String appUrl : friendBotAppsUrl) {
+                        System.out.println("PINGER ::: sending ping to " + appUrl);
+                        BotNetUtils.httpsGETRequest(appUrl);
+                    }
+                    Thread.sleep(PING_DELAY);
                 }
-                Thread.sleep(PING_DELAY);
             } catch (Exception e) {
                 e.printStackTrace();
             }
