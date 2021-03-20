@@ -9,11 +9,11 @@ import com.company.data.database.BotNetDataBase;
 import com.company.utils.ProcessStatus;
 import org.jetbrains.annotations.NotNull;
 
-public class RegisterBotNetCommand implements BotCommand {
+public class StartBotNetCommand implements BotCommand {
     private final BotNetDataBase botNetDataBase;
     private final String webAppUrl;
 
-    public RegisterBotNetCommand(@NotNull final BotNetDataBase botNetDataBase,
+    public StartBotNetCommand(@NotNull final BotNetDataBase botNetDataBase,
                                  @NotNull final String webAppUrl) {
         this.botNetDataBase = botNetDataBase;
         this.webAppUrl = webAppUrl;
@@ -26,8 +26,7 @@ public class RegisterBotNetCommand implements BotCommand {
 
     @Override
     public boolean parseCommand(@NotNull final BotNetMail botNetMail) {
-        return botNetMail.getMessage().startsWith("/register") &&
-                !botNetDataBase.checkUserAuthorizationByChatId(botNetMail.getUserChatId());
+        return botNetMail.getMessage().startsWith("/start");
     }
 
     @Override
@@ -35,7 +34,7 @@ public class RegisterBotNetCommand implements BotCommand {
         final BotNetBox botNetBox = new BotNetBox();
         botNetBox.setReceiverChatId(botNetMail.getUserChatId());
 
-        botNetBox.setMessage("Please register in our main website " + webAppUrl);
+        botNetBox.setMessage("Welcome to BotNet. Main web app url : " + webAppUrl);
 
         // Not authorized user
         botNetBox.addButton(new BotNetButton("Login", "/login"));

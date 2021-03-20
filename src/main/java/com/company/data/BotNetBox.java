@@ -27,6 +27,11 @@ public class BotNetBox {
         return this;
     }
 
+    public void cleanButtons() {
+        buttonsMatrix.clear();
+        setNewButtonsLine();
+    }
+
     public boolean hasButtons() {
         return getButtonsMatrix().size() > 1 || getButtonsMatrix().get(0).size() > 0;
     }

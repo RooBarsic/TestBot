@@ -1,6 +1,7 @@
 package com.company.api.bots.commands;
 
 import com.company.api.bots.BotRequestSender;
+import com.company.data.AvailableCommand;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
@@ -20,6 +21,11 @@ public class HelpBotNetCommand implements BotCommand {
 
     public HelpBotNetCommand(@NotNull final BotNetDataBase botNetDataBase) {
         this.botNetDataBase = botNetDataBase;
+    }
+
+    @Override
+    public AvailableCommand getCommandMarcForRemembering(@NotNull BotNetMail botNetMail) {
+        return AvailableCommand.NONE;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.company.data.database;
 
+import com.company.data.AvailableCommand;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -11,22 +11,35 @@ import java.util.*;
  * @author Farrukh Karimov
  */
 public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
-    private final Map<String, Boolean> userAuthorizationByChatId;
+    private final Map<String, Boolean> userAuthorizationStatusByChatId;
     private final Map<String, Integer> userRoomIdByChatId;
     private final List<List<String>> roomMembersChatIds;
+    private final Map<String, AvailableCommand> userPreviousCommandByChatId;
+    private final Map<String, String> userAuthorizationKeyByChatId;
 
     public BotNetDataBaseHashMapImpl() {
-        userAuthorizationByChatId = new HashMap<>();
+        userAuthorizationStatusByChatId = new HashMap<>();
         userRoomIdByChatId = new HashMap<>();
         roomMembersChatIds = new ArrayList<>();
+        userPreviousCommandByChatId = new HashMap<>();
+        userAuthorizationKeyByChatId = new HashMap<>();
+    }
+
+    @Override
+    public void updateDb(@NotNull String userChatId) {
+        userAuthorizationStatusByChatId.putIfAbsent(userChatId, false);
+        userRoomIdByChatId.putIfAbsent(userChatId, -1);
+        userPreviousCommandByChatId.putIfAbsent(userChatId, AvailableCommand.NONE);
+        userAuthorizationKeyByChatId.putIfAbsent(userChatId, "Hello");
+
     }
 
     @Override
     public boolean checkUserAuthorizationByChatId(@NotNull String userChatId) {
-        if (userAuthorizationByChatId.containsKey(userChatId)) {
-            return userAuthorizationByChatId.get(userChatId);
+        if (userAuthorizationStatusByChatId.containsKey(userChatId)) {
+            return userAuthorizationStatusByChatId.get(userChatId);
         }
-        userAuthorizationByChatId.put(userChatId, false);
+        userAuthorizationStatusByChatId.put(userChatId, false);
         return false;
     }
 
@@ -46,8 +59,30 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
         return null;
     }
 
+    @Override
+    public AvailableCommand getUserPrevCommandByChatId(@NotNull String userChatId) {
+        return userPreviousCommandByChatId.getOrDefault(userChatId, AvailableCommand.NONE);
+    }
+
+    @Override
+    public void setUserParsedCommandByChatId(@NotNull String userChatId, @NotNull AvailableCommand availableCommand) {
+        userPreviousCommandByChatId.put(userChatId, availableCommand);
+    }
+
+    @Override
+    public boolean authorizeUserByChatId(@NotNull String userChatId, @NotNull String authorizationKey) {
+        if (!userAuthorizationKeyByChatId.containsKey(userChatId)) {
+            updateDb(userChatId);
+        }
+        final String appKey = userAuthorizationKeyByChatId.get(userChatId);
+        if (appKey.equals(authorizationKey)) {
+            return true;
+        }
+        return false;
+    }
+
     public void authorizeUserByChatId(@NotNull final String chatId) {
-        userAuthorizationByChatId.put(chatId, true);
+        userAuthorizationStatusByChatId.put(chatId, true);
     }
 
     public void addUserToRoom(@NotNull final String chatId, int roomId) {

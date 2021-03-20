@@ -1,8 +1,6 @@
 package com.company.api.bots;
 
-import com.company.api.bots.commands.BotCommand;
-import com.company.api.bots.commands.HelpBotNetCommand;
-import com.company.api.bots.commands.RegisterBotNetCommand;
+import com.company.api.bots.commands.*;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
@@ -37,6 +35,8 @@ public class RoomBotLogic {
         botCommandsList.clear();
         botCommandsList.add(new HelpBotNetCommand(botNetDataBase));
         botCommandsList.add(new RegisterBotNetCommand(botNetDataBase, webAppUrl));
+        botCommandsList.add(new StartBotNetCommand(botNetDataBase, webAppUrl));
+        botCommandsList.add(new LoginBotNetCommand(botNetDataBase, webAppUrl));
     }
 
     public void start() {
@@ -69,6 +69,9 @@ public class RoomBotLogic {
         for (final BotCommand botCommand : botCommandsList) {
             if (botCommand.parseCommand(botNetMail)) {
                 botCommand.executeCommand(botNetMail, botRequestSender);
+
+                // remember type of parsed command
+                botNetDataBase.setUserParsedCommandByChatId(botNetMail.getUserChatId(), botCommand.getCommandMarcForRemembering(botNetMail));
                 return true;
             }
         }
