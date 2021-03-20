@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Main {
     private static Tokens tokensStorage;
+    private static String webAppUrl = "https://www.google.com/";
 
     public static void main(String[] args) {
         System.out.println("Hello HackNU");
@@ -25,7 +26,7 @@ public class Main {
 
         // create BotNet DataBase
         final BotNetDataBase botNetDataBase = new BotNetDataBaseHashMapImpl(); //initDataBase();
-        addTestUser((BotNetDataBaseHashMapImpl) botNetDataBase);
+        //addTestUser((BotNetDataBaseHashMapImpl) botNetDataBase);
 
         // create HyperMessages queue
         final ConcurrentLinkedDeque<BotNetMail> botNetMails = new ConcurrentLinkedDeque<>();
@@ -47,8 +48,9 @@ public class Main {
     private static void runBotBrain(@NotNull final BotNetDataBase botNetDataBase,
                                     @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                     @NotNull final BotRequestSender botRequestSender) {
+
         System.out.println("##### Starting BotBrain ....... ");
-        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender, botNetDataBase, botNetReceivedMails);
+        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender, botNetDataBase, botNetReceivedMails, webAppUrl);
         botMainLogic.start();
         System.out.println("##### BotBrain - started ....... ");
     }

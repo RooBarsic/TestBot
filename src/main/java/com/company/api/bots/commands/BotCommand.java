@@ -7,7 +7,7 @@ import com.company.utils.ProcessStatus;
 import org.jetbrains.annotations.NotNull;
 
 public interface BotCommand {
-    boolean parseCommand(@NotNull final String command);
+    boolean parseCommand(@NotNull final BotNetMail botNetMail);
     ProcessStatus executeCommand(@NotNull final BotNetMail botNetMail, @NotNull final BotRequestSender botRequestSender);
 
 }

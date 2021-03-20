@@ -2,6 +2,7 @@ package com.company.api.bots;
 
 import com.company.api.bots.commands.BotCommand;
 import com.company.api.bots.commands.HelpBotNetCommand;
+import com.company.api.bots.commands.RegisterBotNetCommand;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
@@ -17,14 +18,17 @@ public class RoomBotLogic {
     private final BotNetDataBase botNetDataBase;
     private final ConcurrentLinkedDeque<BotNetMail> receivedMails;
     private final List<BotCommand> botCommandsList;
+    private final String webAppUrl;
 
     public RoomBotLogic(@NotNull final BotRequestSender botRequestSender,
                         @NotNull final BotNetDataBase botNetDataBase,
-                        @NotNull final ConcurrentLinkedDeque<BotNetMail> receivedMails) {
+                        @NotNull final ConcurrentLinkedDeque<BotNetMail> receivedMails,
+                        @NotNull final String webAppUrl) {
         this.botRequestSender = botRequestSender;
         this.receivedMails = receivedMails;
         this.botNetDataBase = botNetDataBase;
         this.botCommandsList = new ArrayList<>();
+        this.webAppUrl = webAppUrl;
 
         initCommands();
     }
@@ -32,6 +36,7 @@ public class RoomBotLogic {
     private void initCommands() {
         botCommandsList.clear();
         botCommandsList.add(new HelpBotNetCommand(botNetDataBase));
+        botCommandsList.add(new RegisterBotNetCommand(botNetDataBase, webAppUrl));
     }
 
     public void start() {
@@ -62,7 +67,7 @@ public class RoomBotLogic {
 
     private boolean parseAndRunCommand(@NotNull final BotNetMail botNetMail) {
         for (final BotCommand botCommand : botCommandsList) {
-            if (botCommand.parseCommand(botNetMail.getMessage())) {
+            if (botCommand.parseCommand(botNetMail)) {
                 botCommand.executeCommand(botNetMail, botRequestSender);
                 return true;
             }

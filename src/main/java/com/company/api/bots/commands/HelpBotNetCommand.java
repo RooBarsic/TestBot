@@ -23,8 +23,8 @@ public class HelpBotNetCommand implements BotCommand {
     }
 
     @Override
-    public boolean parseCommand(@NotNull final String command) {
-        return command.startsWith("/help");
+    public boolean parseCommand(@NotNull final BotNetMail botNetMail) {
+        return botNetMail.getMessage().startsWith("/help");
     }
 
     @Override
