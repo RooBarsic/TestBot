@@ -56,7 +56,7 @@ public class Main {
         //final BotRequestSender facebookBotRequestSender = runTestingFacebookBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer);
 
         // create and start pinger
-        runPeriodicalPing();
+        //runPeriodicalPing();
 
         // start HttpServer
         httpServer.start();
