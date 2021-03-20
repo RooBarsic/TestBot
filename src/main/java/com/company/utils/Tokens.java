@@ -30,7 +30,9 @@ public class Tokens {
     private String AWS_DB_W3_ROOT_USER = "null";
     private String AWS_DB_W3_ROOT_PASSWORD = "null";
     private String APP_SECRET_KEY = "null";
-
+    private String TESTING_TELEGRAM_BOT_HEROKU_URL = "null";
+    private String TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = "null";
+    private String PING_DELAY = "null";
 
     /** add parsing tokens from file or System environments */
     public void addTokens() {
@@ -77,7 +79,10 @@ public class Tokens {
                         "AWS_DB_W3_URL = " + AWS_DB_W3_URL + "\n" +
                         "AWS_DB_W3_ROOT_USER = " + AWS_DB_W3_ROOT_USER + "\n" +
                         "AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD + "\n" +
-                        "APP_SECRET_KEY = " + APP_SECRET_KEY + "\n\n");
+                        "APP_SECRET_KEY = " + APP_SECRET_KEY + "\n" +
+                        "TESTING_TELEGRAM_BOT_HEROKU_URL = " + TESTING_TELEGRAM_BOT_HEROKU_URL + "\n" +
+                        "TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = " + TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL + "\n" +
+                        "PING_DELAY = " + PING_DELAY + "\n\n");
 
 /*
 					String str1 = scanner.nextLine();
@@ -171,6 +176,9 @@ public class Tokens {
             AWS_DB_W3_ROOT_PASSWORD = System.getenv("AWS_DB_W3_ROOT_PASSWORD");
 
             APP_SECRET_KEY = System.getenv("APP_SECRET_KEY");
+            TESTING_TELEGRAM_BOT_HEROKU_URL = System.getenv("TESTING_TELEGRAM_BOT_HEROKU_URL");
+            TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = System.getenv("TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL");
+            PING_DELAY = System.getenv("PING_DELAY");
 
         }
     }
@@ -231,6 +239,15 @@ public class Tokens {
                 break;
             case "APP_SECRET_KEY" :
                 APP_SECRET_KEY = tokenValue;
+                break;
+            case "TESTING_TELEGRAM_BOT_HEROKU_URL" :
+                TESTING_TELEGRAM_BOT_HEROKU_URL = tokenValue;
+                break;
+            case "TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL" :
+                TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = tokenValue;
+                break;
+            case "PING_DELAY" :
+                PING_DELAY = tokenValue;
                 break;
         }
     }
@@ -294,6 +311,15 @@ public class Tokens {
             case "APP_SECRET_KEY" :
                 temp = APP_SECRET_KEY;
                 break;
+            case "TESTING_TELEGRAM_BOT_HEROKU_URL" :
+                temp = TESTING_TELEGRAM_BOT_HEROKU_URL;
+                break;
+            case "TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL" :
+                temp = TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL;
+                break;
+            case "PING_DELAY" :
+                temp = PING_DELAY;
+                break;
         }
         return temp;
     }
@@ -320,5 +346,8 @@ public class Tokens {
         System.out.println("token :::: AWS_DB_W3_ROOT_PASSWORD = " + AWS_DB_W3_ROOT_PASSWORD);
 
         System.out.println("token :::: APP_SECRET_KEY = " + APP_SECRET_KEY);
+        System.out.println("token :::: TESTING_TELEGRAM_BOT_HEROKU_URL = " + TESTING_TELEGRAM_BOT_HEROKU_URL);
+        System.out.println("token :::: TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL = " + TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL);
+        System.out.println("token :::: PING_DELAY =  " + PING_DELAY);
     }
 }

@@ -6,6 +6,7 @@ import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
+import com.company.utils.BotNetUtils;
 import com.company.utils.ProcessStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +57,7 @@ public class JoinRoomBotNetCommand implements BotCommand {
         if (botNetDataBase.getUserPrevCommandByChatId(botNetMail.getUserChatId()) != AvailableCommand.JOIN_ROOM) {
             botNetBox.setMessage("Please write room Id. You can find available rooms here " + webAppUrl);
         } else {
-            if (!main.java.com.company.utils.BotNetUtils.isNumber(botNetMail.getMessage())) {
+            if (!BotNetUtils.isNumber(botNetMail.getMessage())) {
                 botNetBox.setMessage("Room id is number!! [" + botNetMail.getMessage() + "] is not number!!!\n" +
                         "Try again please");
             } else {
