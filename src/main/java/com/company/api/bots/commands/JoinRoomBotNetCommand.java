@@ -9,12 +9,12 @@ import com.company.data.database.BotNetDataBase;
 import com.company.utils.ProcessStatus;
 import org.jetbrains.annotations.NotNull;
 
-public class JoinBotNetCommand implements BotCommand {
+public class JoinRoomBotNetCommand implements BotCommand {
     private final BotNetDataBase botNetDataBase;
     private final String webAppUrl;
 
-    public JoinBotNetCommand(@NotNull final BotNetDataBase botNetDataBase,
-                              @NotNull final String webAppUrl) {
+    public JoinRoomBotNetCommand(@NotNull final BotNetDataBase botNetDataBase,
+                                 @NotNull final String webAppUrl) {
         this.botNetDataBase = botNetDataBase;
         this.webAppUrl = webAppUrl;
     }
@@ -22,10 +22,10 @@ public class JoinBotNetCommand implements BotCommand {
     @Override
     public AvailableCommand getCommandMarcForRemembering(@NotNull BotNetMail botNetMail) {
         if (parseCommand(botNetMail)) {
-            if (botNetDataBase.getUserPrevCommandByChatId(botNetMail.getUserChatId()) == AvailableCommand.JOIN) {
+            if (botNetDataBase.getUserPrevCommandByChatId(botNetMail.getUserChatId()) == AvailableCommand.JOIN_ROOM) {
                 return AvailableCommand.NONE;
             }
-            return AvailableCommand.JOIN;
+            return AvailableCommand.JOIN_ROOM;
         }
         return AvailableCommand.NONE;
     }
@@ -34,9 +34,9 @@ public class JoinBotNetCommand implements BotCommand {
     public boolean parseCommand(@NotNull final BotNetMail botNetMail) {
         final String userChatId = botNetMail.getUserChatId();
         final String receivedMessage = botNetMail.getMessage();
-        if (!botNetDataBase.checkUserAuthorizationByChatId(userChatId) &&
+        if (botNetDataBase.checkUserAuthorizationByChatId(userChatId) &&
                 (receivedMessage.startsWith("/join") ||
-                        botNetDataBase.getUserPrevCommandByChatId(userChatId) == AvailableCommand.JOIN)
+                        botNetDataBase.getUserPrevCommandByChatId(userChatId) == AvailableCommand.JOIN_ROOM)
         )
             return true;
         return false;
@@ -53,7 +53,7 @@ public class JoinBotNetCommand implements BotCommand {
         botNetBox.addButton(new BotNetButton("Profile", "/profile"));
         botNetBox.addButton(new BotNetButton("Help", "/help"));
 
-        if (botNetDataBase.getUserPrevCommandByChatId(botNetMail.getUserChatId()) != AvailableCommand.JOIN) {
+        if (botNetDataBase.getUserPrevCommandByChatId(botNetMail.getUserChatId()) != AvailableCommand.JOIN_ROOM) {
             botNetBox.setMessage("Please write room Id. You can find available rooms here " + webAppUrl);
         } else {
             if (!main.java.com.company.utils.BotNetUtils.isNumber(botNetMail.getMessage())) {
@@ -64,6 +64,7 @@ public class JoinBotNetCommand implements BotCommand {
                 if (botNetDataBase.isRoomExist(roomId)) {
                     botNetBox.setMessage("Congratulations. You are int the room_id : " + roomId + " now. Enjoy!");
                     botNetBox.cleanButtons();
+                    botNetDataBase.addUserToRoom(botNetMail.getUserChatId(), roomId);
 
                     botNetBox.addButton(new BotNetButton("Leave", "/leave"));
                     botNetBox.addButton(new BotNetButton("Profile", "/profile"));

@@ -43,8 +43,8 @@ public class Main {
     private static void addTestUser(@NotNull final BotNetDataBaseHashMapImpl botNetDataBase) {
         //botNetDataBase.isRoomExist();
 
-        botNetDataBase.authorizeUserByChatId("613929425");
-        botNetDataBase.addUserToRoom("613929425", 0);
+//        botNetDataBase.authorizeUserByChatId("613929425");
+//        botNetDataBase.addUserToRoom("613929425", 0);
     }
 
     private static void runBotBrain(@NotNull final BotNetDataBase botNetDataBase,

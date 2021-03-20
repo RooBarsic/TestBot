@@ -54,6 +54,7 @@ public class LoginBotNetCommand implements BotCommand {
         } else {
             if (botNetDataBase.authorizeUserByChatId(botNetMail.getUserChatId(), botNetMail.getMessage())) {
                 botNetBox.setMessage("Congratulations. You are authorized now");
+
                 botNetBox.cleanButtons();
                 botNetBox.addButton(new BotNetButton("Join", "/join"));
                 botNetBox.addButton(new BotNetButton("Create", "/create"));

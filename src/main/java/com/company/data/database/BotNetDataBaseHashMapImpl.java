@@ -76,6 +76,8 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
         }
         final String appKey = userAuthorizationKeyByChatId.get(userChatId);
         if (appKey.equals(authorizationKey)) {
+            userAuthorizationStatusByChatId.put(userChatId, true);
+            userAuthorizationKeyByChatId.remove(userChatId);
             return true;
         }
         return false;
@@ -90,14 +92,23 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
         userAuthorizationStatusByChatId.put(chatId, true);
     }
 
+    @Override
     public void addUserToRoom(@NotNull final String chatId, int roomId) {
         int oldRoomId = getUserRoomIdByChatId(chatId);
         if (oldRoomId != -1) {
             roomMembersChatIds.get(oldRoomId).remove(chatId);
         }
         userRoomIdByChatId.put(chatId, roomId);
-        roomMembersChatIds.putIfAbsent(0, new ArrayList<>());
+        roomMembersChatIds.putIfAbsent(roomId, new ArrayList<>());
         roomMembersChatIds.get(roomId).add(chatId);
+    }
+
+    @Override
+    public boolean createRoomIfNotExist(@NotNull int roomId) {
+        if (roomMembersChatIds.putIfAbsent(roomId, new ArrayList<>()) == null){
+            return true;
+        }
+        return false;
     }
 
 

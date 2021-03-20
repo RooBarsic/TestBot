@@ -3,5 +3,6 @@ package com.company.data;
 public enum AvailableCommand {
     NONE,
     LOGIN,
-    JOIN,
+    JOIN_ROOM,
+    CREATE_ROOM,
 }
