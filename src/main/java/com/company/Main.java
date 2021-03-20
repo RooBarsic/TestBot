@@ -6,6 +6,7 @@ import com.company.api.bots.telegram.TelegramBotRequestListener;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
+import com.company.data.database.BotNetDataBaseHashMapImpl;
 import com.company.utils.Tokens;
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -23,7 +24,7 @@ public class Main {
         tokensStorage.showTokens();
 
         // create BotNet DataBase
-        final BotNetDataBase botNetDataBase = new BotNetDataBase(); //initDataBase();
+        final BotNetDataBase botNetDataBase = new BotNetDataBaseHashMapImpl(); //initDataBase();
 
         // create HyperMessages queue
         final ConcurrentLinkedDeque<BotNetMail> botNetMails = new ConcurrentLinkedDeque<>();
@@ -41,7 +42,7 @@ public class Main {
                                     @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                     @NotNull final BotRequestSender botRequestSender) {
         System.out.println("##### Starting BotBrain ....... ");
-        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender, botNetReceivedMails);
+        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender, botNetDataBase, botNetReceivedMails);
         botMainLogic.start();
         System.out.println("##### BotBrain - started ....... ");
     }
