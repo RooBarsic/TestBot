@@ -1,11 +1,14 @@
 package com.company.api.bots;
 
+import com.company.api.bots.commands.BotCommand;
+import com.company.api.bots.commands.HelpBotNetCommand;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -13,7 +16,7 @@ public class RoomBotLogic {
     private final BotRequestSender botRequestSender;
     private final BotNetDataBase botNetDataBase;
     private final ConcurrentLinkedDeque<BotNetMail> receivedMails;
-
+    private final List<BotCommand> botCommandsList;
 
     public RoomBotLogic(@NotNull final BotRequestSender botRequestSender,
                         @NotNull final BotNetDataBase botNetDataBase,
@@ -21,6 +24,14 @@ public class RoomBotLogic {
         this.botRequestSender = botRequestSender;
         this.receivedMails = receivedMails;
         this.botNetDataBase = botNetDataBase;
+        this.botCommandsList = new ArrayList<>();
+
+        initCommands();
+    }
+
+    private void initCommands() {
+        botCommandsList.clear();
+        botCommandsList.add(new HelpBotNetCommand(botNetDataBase));
     }
 
     public void start() {
@@ -49,9 +60,22 @@ public class RoomBotLogic {
         botRequestSender.sendBotNetBox(botNetBox);
     }
 
+    private boolean parseAndRunCommand(@NotNull final BotNetMail botNetMail) {
+        for (final BotCommand botCommand : botCommandsList) {
+            if (botCommand.parseCommand(botNetMail.getMessage())) {
+                botCommand.executeCommand(botNetMail, botRequestSender);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void processBotNetMail(@NotNull final BotNetMail botNetMail) {
         try {
             //check commands
+            if (parseAndRunCommand(botNetMail)) {
+                return;
+            }
 
             if (botNetDataBase.checkUserAuthorizationByChatId(botNetMail.getUserChatId())) {
                 //authorized user
@@ -71,7 +95,7 @@ public class RoomBotLogic {
                 } else {
                     // user is a member of some room
 
-                    //report to RabbitMQ about new message in room
+                    //TODO report to RabbitMQ about new message in room
 
                     //transfer received message to users in that messenger
                     final BotNetBox botNetBox = new BotNetBox();

@@ -46,5 +46,19 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
         return null;
     }
 
+    public void authorizeUserByChatId(@NotNull final String chatId) {
+        userAuthorizationByChatId.put(chatId, true);
+    }
+
+    public void addUserToRoom(@NotNull final String chatId, int roomId) {
+        int oldRoomId = getUserRoomIdByChatId(chatId);
+        if (oldRoomId != -1) {
+            roomMembersChatIds.get(oldRoomId).remove(chatId);
+        }
+        userRoomIdByChatId.put(chatId, roomId);
+        roomMembersChatIds.add(new ArrayList<>());
+        roomMembersChatIds.get(roomId).add(chatId);
+    }
+
 
 }
