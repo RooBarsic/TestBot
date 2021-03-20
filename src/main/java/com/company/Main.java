@@ -32,7 +32,7 @@ public class Main {
         final ConcurrentLinkedDeque<BotNetMail> botNetMails = new ConcurrentLinkedDeque<>();
 
         // create and run Telegram bot with BotRoomsBrain
-        final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails);
+        //final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails);
 
         // create and run Telegram bot with BotRoomsBrain
         final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails);
