@@ -16,15 +16,15 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @author Farrukh Karimov
  */
 public class RoomUpdateListener extends CustomHttpHandlerCommand {
-    private final int SERVER_PORT;
+    private final HttpServer httpServer;
     private final String APP_SECRET_KEY;
     private final String LOG_PREFIX = "WebListener ::: ";
     private final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue;
 
-    public RoomUpdateListener(final int SERVER_PORT,
+    public RoomUpdateListener(@NotNull final HttpServer httpServer,
                               @NotNull final String APP_SECRET_KEY,
                               @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue) {
-        this.SERVER_PORT = SERVER_PORT;
+        this.httpServer = httpServer;
         this.APP_SECRET_KEY = APP_SECRET_KEY;
         this.roomUpdatesQueue = roomUpdatesQueue;
     }
@@ -32,11 +32,8 @@ public class RoomUpdateListener extends CustomHttpHandlerCommand {
     public void startListener() {
         new Thread(() -> {
             try {
-                HttpServer httpServer = HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
                 httpServer.createContext("/room/update", this);
-
-                httpServer.start();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }).start();
