@@ -205,6 +205,8 @@ public class Main {
         pingBotFriends.setPingDelay(pingDelay);
         pingBotFriends.addServiceUrl(tokensStorage.getTokens("TESTING_TELEGRAM_BOT_HEROKU_URL"));
         pingBotFriends.addServiceUrl(tokensStorage.getTokens("TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL"));
+
+        pingBotFriends.addServiceUrl(tokensStorage.getTokens("TESTING_FACEBOOK_BOT_HEROKU_URL"));
         pingBotFriends.startPinger();
     }
 }
