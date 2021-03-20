@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 public class FacebookBotRequestSender implements BotRequestSender {
-    private final String DEFAULT_IMG_URL = "https://drive.google.com/file/d/1hBD-jqLtuwt4S0B8EvXIDgDFrwvQtVsJ/view";
+    private final String DEFAULT_IMG_URL = "https://envybox.io/blog/wp-content/uploads/2020/04/%D0%92%D0%B8%D0%B4%D1%8B-%D1%87%D0%B0%D1%82-%D0%B1%D0%BE%D1%82%D0%BE%D0%B2.png";
     private final String PAGE_ACCESS_TOKEN;
     private final String BASE_URL;
     private final String ENTITY_SENDING_URL = "https://graph.facebook.com/v9.0/me/messages?access_token=";
