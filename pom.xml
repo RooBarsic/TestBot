@@ -105,7 +105,7 @@
                     <programs>
                         <program>
                             <mainClass>com.company.Main</mainClass>
-                            <name>workerBotNetLogic</name>
+                            <name>workerBotNetRoomLogic</name>
                         </program>
                     </programs>
                 </configuration>
