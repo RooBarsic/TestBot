@@ -104,6 +104,15 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
     }
 
     @Override
+    public void removeUserFromRoom(@NotNull String chatId) {
+        int oldRoomId = getUserRoomIdByChatId(chatId);
+        if (oldRoomId != -1) {
+            roomMembersChatIds.get(oldRoomId).remove(chatId);
+            userRoomIdByChatId.put(chatId, -1);
+        }
+    }
+
+    @Override
     public boolean createRoomIfNotExist(@NotNull int roomId) {
         if (roomMembersChatIds.putIfAbsent(roomId, new ArrayList<>()) == null){
             return true;

@@ -39,6 +39,7 @@ public class RoomBotLogic {
         botCommandsList.add(new LoginBotNetCommand(botNetDataBase, webAppUrl));
         botCommandsList.add(new JoinRoomBotNetCommand(botNetDataBase, webAppUrl));
         botCommandsList.add(new CreateRoomBotNetCommand(botNetDataBase, webAppUrl));
+        botCommandsList.add(new LeaveRoomBotNetCommand(botNetDataBase, webAppUrl));
     }
 
     public void start() {

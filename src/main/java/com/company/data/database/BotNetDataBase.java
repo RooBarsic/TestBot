@@ -35,6 +35,7 @@ public interface BotNetDataBase {
     boolean isRoomExist(int roomId);
 
     void addUserToRoom(@NotNull final String chatId, int roomId);
+    void removeUserFromRoom(@NotNull final String chatId);
 
     boolean createRoomIfNotExist(@NotNull final int roomId);
 }
