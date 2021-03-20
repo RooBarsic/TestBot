@@ -5,6 +5,7 @@ import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
+import com.company.utils.BotNetUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

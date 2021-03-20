@@ -10,6 +10,7 @@ import com.company.api.web.RoomUpdateListener;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
 import com.company.data.database.BotNetDataBaseHashMapImpl;
+import com.company.utils.PingBotFriends;
 import com.company.utils.Tokens;
 import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
@@ -127,5 +128,14 @@ public class Main {
         System.out.println("##### MailRuAgent bot - started....... ");
 
         return mailRuAgentBot.getBotRequestSender();
+    }
+
+    public void runPeriodicalPing() {
+        final PingBotFriends pingBotFriends = new PingBotFriends();
+        final int pingDelay = Integer.parseInt(tokensStorage.getTokens("PING_DELAY"));
+        pingBotFriends.setPingDelay(pingDelay);
+        pingBotFriends.addServiceUrl(tokensStorage.getTokens("TESTING_TELEGRAM_BOT_HEROKU_URL"));
+        pingBotFriends.addServiceUrl(tokensStorage.getTokens("TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL"));
+        pingBotFriends.startPinger();
     }
 }
