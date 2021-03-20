@@ -26,7 +26,7 @@ public class Main {
 
         // create BotNet DataBase
         final BotNetDataBase botNetDataBase = new BotNetDataBaseHashMapImpl(); //initDataBase();
-        //addTestUser((BotNetDataBaseHashMapImpl) botNetDataBase);
+        addTestUser((BotNetDataBaseHashMapImpl) botNetDataBase);
 
         // create HyperMessages queue
         final ConcurrentLinkedDeque<BotNetMail> botNetMails = new ConcurrentLinkedDeque<>();
@@ -41,6 +41,8 @@ public class Main {
     }
 
     private static void addTestUser(@NotNull final BotNetDataBaseHashMapImpl botNetDataBase) {
+        //botNetDataBase.isRoomExist();
+
         botNetDataBase.authorizeUserByChatId("613929425");
         botNetDataBase.addUserToRoom("613929425", 0);
     }

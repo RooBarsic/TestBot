@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface BotNetDataBase {
 
+
+    void updateDb(@NotNull final String userChatId);
+
     /**
      * checks is user authorized in that specific bot
      * @param userChatId
@@ -29,5 +32,5 @@ public interface BotNetDataBase {
 
     boolean authorizeUserByChatId(@NotNull final String userChatId, @NotNull final String authorizationKey);
 
-    void updateDb(@NotNull final String userChatId);
+    boolean isRoomExist(int roomId);
 }

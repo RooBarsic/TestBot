@@ -13,14 +13,14 @@ import java.util.*;
 public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
     private final Map<String, Boolean> userAuthorizationStatusByChatId;
     private final Map<String, Integer> userRoomIdByChatId;
-    private final List<List<String>> roomMembersChatIds;
+    private final Map<Integer, List<String> > roomMembersChatIds;
     private final Map<String, AvailableCommand> userPreviousCommandByChatId;
     private final Map<String, String> userAuthorizationKeyByChatId;
 
     public BotNetDataBaseHashMapImpl() {
         userAuthorizationStatusByChatId = new HashMap<>();
         userRoomIdByChatId = new HashMap<>();
-        roomMembersChatIds = new ArrayList<>();
+        roomMembersChatIds = new HashMap<>();
         userPreviousCommandByChatId = new HashMap<>();
         userAuthorizationKeyByChatId = new HashMap<>();
     }
@@ -53,7 +53,7 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
 
     @Override
     public List<String> getRoomMembersByRoomId(@NotNull int roomId) {
-        if ((0 <= roomId) && (roomId < roomMembersChatIds.size())) {
+        if (roomMembersChatIds.containsKey(roomId)) {
             return new LinkedList<>(roomMembersChatIds.get(roomId));
         }
         return null;
@@ -81,6 +81,11 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
         return false;
     }
 
+    @Override
+    public boolean isRoomExist(int roomId) {
+        return roomMembersChatIds.containsKey(roomId);
+    }
+
     public void authorizeUserByChatId(@NotNull final String chatId) {
         userAuthorizationStatusByChatId.put(chatId, true);
     }
@@ -91,7 +96,7 @@ public class BotNetDataBaseHashMapImpl implements BotNetDataBase {
             roomMembersChatIds.get(oldRoomId).remove(chatId);
         }
         userRoomIdByChatId.put(chatId, roomId);
-        roomMembersChatIds.add(new ArrayList<>());
+        roomMembersChatIds.putIfAbsent(0, new ArrayList<>());
         roomMembersChatIds.get(roomId).add(chatId);
     }
 
