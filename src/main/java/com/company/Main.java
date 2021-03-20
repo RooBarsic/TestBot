@@ -68,9 +68,8 @@ public class Main {
     private static HttpServer createHttpServer() {
         try {
             final int SERVER_PORT = Integer.parseInt(tokensStorage.getTokens("SERVER_PORT"));
-            HttpServer httpServer = HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
 
-            return httpServer;
+            return HttpServer.create(new InetSocketAddress(SERVER_PORT), 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
