@@ -34,6 +34,8 @@ public class TransferRoomUpdateWorker {
                 // get and remove first box
                 final BotNetMail botNetMail = groupMessagesQueue.removeFirst();
 
+                System.out.println("TransferWorker - got new botMail ( user_id : " + botNetMail.getUserChatId() + "; room = " + botNetMail.getRoomId() + ";  message = " + botNetMail.getMessage());
+
                 sendMessageToRoom(botNetMail);
             }
         }).start();
