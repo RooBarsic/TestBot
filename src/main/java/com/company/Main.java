@@ -2,8 +2,8 @@ package com.company;
 
 import com.company.api.bots.BotRequestSender;
 import com.company.api.bots.RoomBotLogic;
+import com.company.api.bots.mail_ru_agent.MailRuAgentBotRequestListener;
 import com.company.api.bots.telegram.TelegramBotRequestListener;
-import com.company.data.BotNetBox;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
 import com.company.data.database.BotNetDataBaseHashMapImpl;
@@ -31,11 +31,11 @@ public class Main {
         // create HyperMessages queue
         final ConcurrentLinkedDeque<BotNetMail> botNetMails = new ConcurrentLinkedDeque<>();
 
-        // create and run Telegram bot
+        // create and run Telegram bot with BotRoomsBrain
         final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails);
 
-        // start BotBrain
-        runBotBrain(botNetDataBase, botNetMails, telegramBotRequestSender);
+        // create and run Telegram bot with BotRoomsBrain
+        final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails);
 
         System.out.println(" All systems up");
     }
@@ -71,7 +71,28 @@ public class Main {
         testingBot.botConnect();
 
         System.out.println("##### Telegram bot - started ....... ");
+
+        // start BotRoomsBrain
+        runBotBrain(botNetDataBase, botNetReceivedMails, testingBot.getBotRequestSender());
+
         return testingBot.getBotRequestSender();
     }
 
+    private static BotRequestSender runTestingMailRuBot(@NotNull final BotNetDataBase botNetDataBase,
+                                                          @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails) {
+        System.out.println("##### Starting MailRuAgent bot ....... ");
+        final String TESTING_MAIL_RU_AGENT_BOT_TOKEN = tokensStorage.getTokens("TESTING_MAIL_RU_AGENT_BOT_TOKEN");
+
+        final MailRuAgentBotRequestListener mailRuAgentBot = new MailRuAgentBotRequestListener(TESTING_MAIL_RU_AGENT_BOT_TOKEN, botNetDataBase, botNetReceivedMails);
+
+        mailRuAgentBot.startBot();
+
+
+        // start BotRoomsBrain
+        runBotBrain(botNetDataBase, botNetReceivedMails, mailRuAgentBot.getBotRequestSender());
+
+        System.out.println("##### MailRuAgent bot - started....... ");
+
+        return mailRuAgentBot.getBotRequestSender();
+    }
 }

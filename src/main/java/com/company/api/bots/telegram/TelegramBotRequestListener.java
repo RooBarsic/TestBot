@@ -2,7 +2,6 @@ package com.company.api.bots.telegram;
 
 import com.company.api.bots.BotRequestListener;
 import com.company.api.bots.BotRequestSender;
-import com.company.data.BotNetBox;
 import com.company.data.BotNetMail;
 import lombok.Getter;
 import lombok.Setter;

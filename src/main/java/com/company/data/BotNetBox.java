@@ -2,9 +2,14 @@ package com.company.data;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *
+ * @author Farrukh Karimov
+ */
 public class BotNetBox {
     private String receiverChatId;
     private String message;
@@ -58,5 +63,14 @@ public class BotNetBox {
 
     public void setMessage(@NotNull final String message) {
         this.message = message;
+    }
+
+    //TODO transfer file working functions
+    public boolean hasFiles() {
+        return false;
+    }
+
+    public List<BotNetFile> getFilesList() {
+        return new ArrayList<>();
     }
 }
