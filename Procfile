@@ -1,1 +1,1 @@
-web: sh target/bin/workerBotNetLogic2
+web: sh target/bin/workerBotNetRoomLogic
