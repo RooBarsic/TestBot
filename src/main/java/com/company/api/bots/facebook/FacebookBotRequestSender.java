@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 public class FacebookBotRequestSender implements BotRequestSender {
-    private final String DEFAULT_IMG_URL = "https://www.facebook.com/Roomly-103350858514880/photos/103354481847851/";
+    private final String DEFAULT_IMG_URL = "https://sun9-64.userapi.com/impf/c854124/v854124046/1eb9a0/HXEDfFHRBo4.jpg";
     private final String PAGE_ACCESS_TOKEN;
     private final String BASE_URL;
     private final String ENTITY_SENDING_URL = "https://graph.facebook.com/v9.0/me/messages?access_token=";
