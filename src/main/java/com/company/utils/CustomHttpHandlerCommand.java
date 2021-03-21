@@ -18,7 +18,7 @@ public abstract class CustomHttpHandlerCommand implements HttpHandler {
         String encoding = "UTF-8";
 
         exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + encoding);
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3000/");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
         exchange.getResponseHeaders().add("Access-Control-Max-Age", "1728000");
