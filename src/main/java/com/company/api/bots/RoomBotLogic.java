@@ -1,6 +1,7 @@
 package com.company.api.bots;
 
 import com.company.api.bots.commands.*;
+import com.company.api.web.RoomUpdate;
 import com.company.data.BotNetBox;
 import com.company.data.BotNetButton;
 import com.company.data.BotNetMail;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class RoomBotLogic {
@@ -19,18 +21,27 @@ public class RoomBotLogic {
     private final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue;
     private final List<BotCommand> botCommandsList;
     private final String webAppUrl;
+    private final Map<UiPlatform, String> connectingUrlByPlatformName;
+    private final UiPlatform curBotUiPlatform;
+    private final String APP_SECRET_KEY;
 
     public RoomBotLogic(@NotNull final BotRequestSender botRequestSender,
                         @NotNull final BotNetDataBase botNetDataBase,
                         @NotNull final ConcurrentLinkedDeque<BotNetMail> receivedMails,
                         @NotNull final String webAppUrl,
-                        @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue) {
+                        @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue,
+                        @NotNull final Map<UiPlatform, String> connectingUrlByPlatformName,
+                        @NotNull final UiPlatform curBotUiPlatform,
+                        @NotNull final String APP_SECRET_KEY) {
         this.botRequestSender = botRequestSender;
         this.receivedMails = receivedMails;
         this.botNetDataBase = botNetDataBase;
         this.botCommandsList = new ArrayList<>();
         this.webAppUrl = webAppUrl;
         this.roomUpdatesQueue = roomUpdatesQueue;
+        this.connectingUrlByPlatformName = connectingUrlByPlatformName;
+        this.curBotUiPlatform = curBotUiPlatform;
+        this.APP_SECRET_KEY = APP_SECRET_KEY;
 
         initCommands();
     }
@@ -112,6 +123,12 @@ public class RoomBotLogic {
                     // user is a member of some room
 
                     //TODO report to RabbitMQ about new message in room
+                    final RoomUpdate roomUpdate = new RoomUpdate(userRoomId, botNetMail.getMessage(), APP_SECRET_KEY);
+                    connectingUrlByPlatformName.forEach(((uiPlatform, url) -> {
+                        if (uiPlatform != curBotUiPlatform) {
+                            BotNetUtils.httpsPOSTRequest(url, roomUpdate);
+                        }
+                    }));
 
                     //transfer received message to users in that messenger
                     botNetMail.setRoomId(userRoomId);
