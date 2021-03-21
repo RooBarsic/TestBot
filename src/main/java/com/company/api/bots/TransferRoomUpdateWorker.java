@@ -50,6 +50,10 @@ public class TransferRoomUpdateWorker {
         botNetBox.addButton(new BotNetButton("Profile", "/profile"));
         botNetBox.addButton(new BotNetButton("Help", "/help"));
 
+        if (!botNetDataBase.isRoomExist(botNetMail.getRoomId())) {
+            botNetDataBase.createRoomIfNotExist(botNetMail.getRoomId());
+        }
+
         final List<String> roomMembersChatIds = botNetDataBase.getRoomMembersByRoomId(groupId);
         for (final String receiverChatId : roomMembersChatIds) {
             if (!receiverChatId.equals(botNetMail.getUserChatId())) {
