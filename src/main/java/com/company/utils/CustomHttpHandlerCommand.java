@@ -21,7 +21,7 @@ public abstract class CustomHttpHandlerCommand implements HttpHandler {
         System.out.println("incomig request headers num = " + exchange.getRequestHeaders().size());
         Headers requestHeaders = exchange.getRequestHeaders();
         requestHeaders.forEach((a, b) -> {
-            System.out.print(a + " ");
+            System.out.print(a + " : ");
             for (String x : b) {
                 System.out.print(x + "; ");
             }
