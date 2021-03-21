@@ -42,12 +42,12 @@ public class RoomUpdateListener extends CustomHttpHandlerCommand {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        if (exchange.getRequestMethod().equals("GET")) {
+        if (exchange.getRequestMethod().equals("POST")) {
+            handlePostRequest(exchange);
+        } else {
             System.out.println(LOG_PREFIX + " got GET request (ping)");
 
             endResponse(exchange, "Hello", 200);
-        } else {
-            handlePostRequest(exchange);
         }
     }
 
