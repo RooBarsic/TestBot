@@ -57,13 +57,13 @@ public class Main {
         final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue = new ConcurrentLinkedDeque<>();
 
         // create and run Telegram bot with BotRoomsBrain
-        final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
+        //final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and run MailRuAgentBot bot with BotRoomsBrain
         //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and run Facebook bot with BotRoomsBrain
-        //final BotRequestSender facebookBotRequestSender = runTestingFacebookBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
+        final BotRequestSender facebookBotRequestSender = runTestingFacebookBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and start pinger
         runPeriodicalPing();
