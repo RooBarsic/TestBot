@@ -3,6 +3,7 @@ package com.company;
 import com.company.api.bots.BotRequestSender;
 import com.company.api.bots.RoomBotLogic;
 import com.company.api.bots.TransferRoomUpdateWorker;
+import com.company.api.bots.UiPlatform;
 import com.company.api.bots.facebook.FacebookBotRequestListener;
 import com.company.api.bots.mail_ru_agent.MailRuAgentBotRequestListener;
 import com.company.api.bots.telegram.TelegramBotRequestListener;
@@ -11,6 +12,7 @@ import com.company.api.web.RoomUpdateListener;
 import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
 import com.company.data.database.BotNetDataBaseHashMapImpl;
+import com.company.utils.BotNetUtils;
 import com.company.utils.PingBotFriends;
 import com.company.utils.Tokens;
 import com.google.gson.Gson;
@@ -20,6 +22,8 @@ import org.telegram.telegrambots.ApiContextInitializer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Main {
@@ -31,6 +35,12 @@ public class Main {
         tokensStorage = new Tokens();
         tokensStorage.addTokens();
         tokensStorage.showTokens();
+
+        Map<UiPlatform, String> appUrlByPlatformName = new HashMap<>();
+        appUrlByPlatformName.put(UiPlatform.TELEGRAM, tokensStorage.getTokens("TESTING_TELEGRAM_BOT_HEROKU_URL"));
+        appUrlByPlatformName.put(UiPlatform.MAIL_RU_AGENT, tokensStorage.getTokens("TESTING_MAIL_RU_AGENT_BOT_HEROKU_URL"));
+        appUrlByPlatformName.put(UiPlatform.FACEBOOK, tokensStorage.getTokens("TESTING_FACEBOOK_BOT_HEROKU_URL"));
+
 
         HttpServer httpServer = createHttpServer();
         if (httpServer == null){
@@ -47,13 +57,13 @@ public class Main {
         final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue = new ConcurrentLinkedDeque<>();
 
         // create and run Telegram bot with BotRoomsBrain
-        //final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer);
+        final BotRequestSender telegramBotRequestSender = runTestingTelegramBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and run MailRuAgentBot bot with BotRoomsBrain
-        //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer);
+        //final BotRequestSender mailRuAgentBotRequestSender = runTestingMailRuBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and run Facebook bot with BotRoomsBrain
-        final BotRequestSender facebookBotRequestSender = runTestingFacebookBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer);
+        //final BotRequestSender facebookBotRequestSender = runTestingFacebookBot(botNetDataBase, botNetMails, roomUpdatesQueue, httpServer, appUrlByPlatformName);
 
         // create and start pinger
         runPeriodicalPing();
@@ -80,10 +90,21 @@ public class Main {
     private static void runBotBrain(@NotNull final BotNetDataBase botNetDataBase,
                                     @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                     @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue,
-                                    @NotNull final BotRequestSender botRequestSender) {
+                                    @NotNull final BotRequestSender botRequestSender,
+                                    @NotNull final Map<UiPlatform, String> appUrlByPlatformName,
+                                    @NotNull final UiPlatform curBotUiPlatform
+                                    ) {
 
         System.out.println("##### Starting BotBrain ....... ");
-        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender, botNetDataBase, botNetReceivedMails, webAppUrl, roomUpdatesQueue);
+        final RoomBotLogic botMainLogic = new RoomBotLogic(botRequestSender,
+                botNetDataBase,
+                botNetReceivedMails,
+                webAppUrl,
+                roomUpdatesQueue,
+                appUrlByPlatformName,
+                curBotUiPlatform,
+                tokensStorage.getTokens("APP_SECRET_KEY")
+        );
         botMainLogic.start();
         System.out.println("##### BotBrain - started ....... ");
     }
@@ -113,7 +134,8 @@ public class Main {
     private static BotRequestSender runTestingTelegramBot(@NotNull final BotNetDataBase botNetDataBase,
                                                           @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                                           @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue,
-                                                          @NotNull final HttpServer httpServer) {
+                                                          @NotNull final HttpServer httpServer,
+                                                          @NotNull final Map<UiPlatform, String> appUrlByPlatformName) {
         System.out.println("##### Starting Telegram bot ....... ");
         ApiContextInitializer.init();
         final String TESTING_TELEGRAM_BOT_NAME = tokensStorage.getTokens("TESTING_TELEGRAM_BOT_NAME");
@@ -132,7 +154,12 @@ public class Main {
         runWebRoomUpdateListener(roomUpdatesQueue, httpServer);
 
         // start BotRoomsBrain
-        runBotBrain(botNetDataBase, botNetReceivedMails, roomUpdatesQueue, testingBot.getBotRequestSender());
+        runBotBrain(botNetDataBase,
+                botNetReceivedMails,
+                roomUpdatesQueue,
+                testingBot.getBotRequestSender(),
+                appUrlByPlatformName,
+                UiPlatform.TELEGRAM);
 
         return testingBot.getBotRequestSender();
     }
@@ -140,7 +167,8 @@ public class Main {
     private static BotRequestSender runTestingMailRuBot(@NotNull final BotNetDataBase botNetDataBase,
                                                         @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                                         @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue,
-                                                        @NotNull final HttpServer httpServer) {
+                                                        @NotNull final HttpServer httpServer,
+                                                        @NotNull final Map<UiPlatform, String> appUrlByPlatformName) {
         System.out.println("##### Starting MailRuAgent bot ....... ");
         final String TESTING_MAIL_RU_AGENT_BOT_TOKEN = tokensStorage.getTokens("TESTING_MAIL_RU_AGENT_BOT_TOKEN");
 
@@ -155,7 +183,12 @@ public class Main {
         runWebRoomUpdateListener(roomUpdatesQueue, httpServer);
 
         // start BotRoomsBrain
-        runBotBrain(botNetDataBase, botNetReceivedMails, roomUpdatesQueue, mailRuAgentBot.getBotRequestSender());
+        runBotBrain(botNetDataBase,
+                botNetReceivedMails,
+                roomUpdatesQueue,
+                mailRuAgentBot.getBotRequestSender(),
+                appUrlByPlatformName,
+                UiPlatform.MAIL_RU_AGENT);
 
         System.out.println("##### MailRuAgent bot - started....... ");
 
@@ -165,7 +198,8 @@ public class Main {
     private static BotRequestSender runTestingFacebookBot(@NotNull final BotNetDataBase botNetDataBase,
                                                           @NotNull final ConcurrentLinkedDeque<BotNetMail> botNetReceivedMails,
                                                           @NotNull final ConcurrentLinkedDeque<BotNetMail> roomUpdatesQueue,
-                                                          @NotNull final HttpServer httpServer) {
+                                                          @NotNull final HttpServer httpServer,
+                                                          @NotNull final Map<UiPlatform, String> appUrlByPlatformName) {
         System.out.println("##### Starting Facebook bot ....... ");
         final String TESTING_FACEBOOK_BOT_VERIFY_TOKEN = tokensStorage.getTokens("TESTING_FACEBOOK_BOT_VERIFY_TOKEN");
         final String TESTING_FACEBOOK_BOT_PAGE_ACCESS_TOKEN = tokensStorage.getTokens("TESTING_FACEBOOK_BOT_PAGE_ACCESS_TOKEN");
@@ -193,7 +227,12 @@ public class Main {
         runWebRoomUpdateListener(roomUpdatesQueue, httpServer);
 
         // start BotRoomsBrain
-        runBotBrain(botNetDataBase, botNetReceivedMails, roomUpdatesQueue, facebookBot.getBotRequestSender());
+        runBotBrain(botNetDataBase,
+                botNetReceivedMails,
+                roomUpdatesQueue,
+                facebookBot.getBotRequestSender(),
+                appUrlByPlatformName,
+                UiPlatform.FACEBOOK);
 
         System.out.println("##### Facebook bot - started....... ");
         return facebookBot.getBotRequestSender();

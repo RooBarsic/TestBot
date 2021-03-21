@@ -1,6 +1,18 @@
 package com.company.utils;
 
+import com.company.api.web.RoomUpdate;
+import com.company.data.BotNetMail;
 import com.company.data.database.BotNetDataBase;
+import com.google.gson.Gson;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.HttpEntityWrapper;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -10,6 +22,9 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BotNetUtils {
 
@@ -186,4 +201,53 @@ public class BotNetUtils {
         }
         return null;
     }
+
+
+    /** Method to make quick GET request and get the JSON response data*/
+    public static String httpsPOSTRequest(@NotNull final String urlPath, @NotNull final RoomUpdate roomUpdate) {
+        try {
+            HttpURLConnection con;
+            URL myUrl = new URL(urlPath);
+            con = (HttpURLConnection) myUrl.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            Gson gson = new Gson();
+
+            byte[] out = gson.toJson(roomUpdate, RoomUpdate.class).getBytes(StandardCharsets.UTF_8);
+            int length = out.length;
+
+            con.setFixedLengthStreamingMode(length);
+            con.connect();
+            try(OutputStream os = con.getOutputStream()) {
+                os.write(out);
+            }
+// Do something with http.getInputStream()
+
+            StringBuilder content = new StringBuilder();
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                br.lines().forEach( line -> {
+                    content.append(line);
+                    content.append(System.lineSeparator());
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return content.toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
