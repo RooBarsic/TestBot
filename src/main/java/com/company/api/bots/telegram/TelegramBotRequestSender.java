@@ -9,12 +9,15 @@ import com.company.utils.ProcessStatus;
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.api.methods.send.*;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,8 +50,12 @@ public class TelegramBotRequestSender extends DefaultAbsSender implements BotReq
             final List<List<BotNetButton>> buttonsMatrix = botNetBox.getButtonsMatrix();
             final List<List<InlineKeyboardButton>> telegramButtonsMatrix = new LinkedList<>();
 
+//            List<KeyboardRow> keyboardRowsList = new ArrayList<>();
+//
             for (final List<BotNetButton> buttonsInRow : buttonsMatrix) {
                 telegramButtonsMatrix.add(new LinkedList<>());
+//
+//                KeyboardRow keyboardRow = new KeyboardRow();
 
                 for (final BotNetButton botNetButton : buttonsInRow) {
 
@@ -59,9 +66,16 @@ public class TelegramBotRequestSender extends DefaultAbsSender implements BotReq
                     telegramButtonsMatrix
                             .get(telegramButtonsMatrix.size() - 1)
                             .add(telegramKeyboardButton);
+
+//                    keyboardRow.add
                 }
             }
             telegramResponseMessage.setReplyMarkup(new InlineKeyboardMarkup().setKeyboard(telegramButtonsMatrix));
+//            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+//            replyKeyboardMarkup.setResizeKeyboard(true);
+//
+//            replyKeyboardMarkup.setKeyboard();
+//            telegramResponseMessage.setReplyMarkup(new ReplyKeyboardMarkup().set);
         }
 
         // send response

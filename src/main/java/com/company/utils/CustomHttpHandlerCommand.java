@@ -17,8 +17,9 @@ public abstract class CustomHttpHandlerCommand implements HttpHandler {
     public void endResponse(HttpExchange exchange, String response, int respCode) throws IOException {
         String encoding = "UTF-8";
 
-        exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + encoding);
-        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Content-Type", "text/html; charset=" + encoding);
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        //exchange.getResponseHeaders().add("");
         exchange.sendResponseHeaders(respCode, response.getBytes().length);
         OutputStream output = exchange.getResponseBody();
         output.write(response.getBytes());
